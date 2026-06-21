@@ -281,7 +281,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, D7_Pin|D6_Pin|D5_Pin|D4_Pin
+                          |E_Pin|RS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -289,12 +290,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin;
+  /*Configure GPIO pins : D7_Pin D6_Pin D5_Pin D4_Pin
+                           E_Pin RS_Pin */
+  GPIO_InitStruct.Pin = D7_Pin|D6_Pin|D5_Pin|D4_Pin
+                          |E_Pin|RS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -302,6 +305,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+// Overwriting USART2 channel for debugging purposes
+int _write(int file, char *ptr, int len){
+  HAL_UART_Transmit(&huart2, (uint8_t *)ptr, len, HAL_MAX_DELAY);
+  return len;
+}
 
 /* USER CODE END 4 */
 
@@ -318,7 +326,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(500);
   }
   /* USER CODE END 5 */
 }
@@ -336,7 +344,7 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(500);
   }
   /* USER CODE END StartTask02 */
 }
